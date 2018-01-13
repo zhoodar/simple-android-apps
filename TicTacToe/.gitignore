@@ -1,0 +1,25 @@
+*.iml
+.gradle
+.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+/local.properties
+
+#built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Windows clutter
+Thumbs.db
