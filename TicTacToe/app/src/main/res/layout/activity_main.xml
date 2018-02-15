@@ -4,109 +4,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryLight"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="3"
     tools:context="kg.jedi.tictactoe.MainActivity">
 
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="3"
-        android:layout_weight="1">
-        <Button
-            android:id="@+id/b1"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/b2"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/b3"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/wlcome" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:weightSum="3"
+    <Button
+        android:id="@+id/btnSinglePlayer"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-        <Button
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:id="@+id/b4"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/b5"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/b6"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="#FFFFFF"
+        android:text="@string/single_player_3x"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:weightSum="3"
+    <Button
+        android:id="@+id/btnTwoPlayer"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-        <Button
-            android:id="@+id/b7"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/b8"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/b9"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@color/primaryText"
-            android:textSize="72sp"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/two_players_3x"/>
 </LinearLayout>

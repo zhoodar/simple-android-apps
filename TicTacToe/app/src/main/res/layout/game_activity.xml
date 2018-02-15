@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryLight"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:weightSum="3"
+    tools:context="kg.jedi.tictactoe.Game3xActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="3"
+        android:layout_weight="1">
+        <Button
+            android:id="@+id/b1"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/b2"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/b3"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <Button
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:id="@+id/b4"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/b5"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/b6"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <Button
+            android:id="@+id/b7"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/b8"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/b9"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/primaryText"
+            android:textSize="72sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</LinearLayout>
