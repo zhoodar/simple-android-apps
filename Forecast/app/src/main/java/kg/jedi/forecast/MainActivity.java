@@ -1,18 +1,22 @@
 package kg.jedi.forecast;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.net.URL;
 
@@ -23,6 +27,9 @@ import kg.jedi.forecast.utilities.OpenWeatherJsonUtils;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int FORECAST_LOADER_ID = 0;
 
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
@@ -67,8 +74,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-            mForecastAdapter.setWeatherData(null);
-            loadWeatherData();
+            invalidateData();
+            getSupportLoaderManager().restartLoader(FORECAST_LOADER_ID, null, eventListener);
+            return true;
+        }
+
+        if (id == R.id.action_map) {
+            openLocationInMap();
             return true;
         }
 
@@ -76,8 +88,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadWeatherData() {
-        String location = ForecastPreferences.getPreferredWeatherLocation(this);
-        new FetchWeatherTask().execute(location);
+        LoaderCallbacks<String[]> callback = eventListener;
+        Bundle bundleForLoader = null;
+        getSupportLoaderManager().initLoader(FORECAST_LOADER_ID, bundleForLoader, callback);
+    }
+
+    private void invalidateData() {
+        mForecastAdapter.setWeatherData(null);
     }
 
     private void showWeatherDataView() {
@@ -90,23 +107,79 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
+    private void openLocationInMap() {
+
+        String addressString = "1600 Ampitheatre Parkway, CA";
+        Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Log.d(TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+        }
+    }
+
+    private class EventListener implements ForecastAdapter.ForecastAdapterOnClickHandler, LoaderCallbacks<String[]> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+        public void onClick(String weatherForDay) {
+            Context context = MainActivity.this;
+            Class destinationClass = DetailActivity.class;
+            Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+            intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, weatherForDay);
+
+            startActivity(intentToStartDetailActivity);
         }
 
         @Override
-        protected String[] doInBackground(String... params) {
+        public Loader<String[]> onCreateLoader(int id, Bundle args) {
+            return new AsyncTask(MainActivity.this);
+        }
 
-            if (params.length == 0) {
-                return null;
+        @Override
+        public void onLoadFinished(Loader<String[]> loader, String data[]) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mForecastAdapter.setWeatherData(data);
+            if (null == data) {
+                showErrorMessage();
+            } else {
+                showWeatherDataView();
             }
+        }
 
-            String location = params[0];
-            URL weatherRequestUrl = NetworkUtils.buildUrl(location);
+        @Override
+        public void onLoaderReset(Loader<String[]> loader) {
+        }
+
+    }
+
+    private class AsyncTask extends AsyncTaskLoader<String[]> {
+        String[] mWeatherData = null;
+
+        public AsyncTask(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onStartLoading() {
+            if (mWeatherData != null) {
+                deliverResult(mWeatherData);
+            } else {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                forceLoad();
+            }
+        }
+
+        @Override
+        public String[] loadInBackground() {
+
+            String locationQuery = ForecastPreferences
+                    .getPreferredWeatherLocation(MainActivity.this);
+
+            URL weatherRequestUrl = NetworkUtils.buildUrl(locationQuery);
 
             try {
                 String jsonWeatherResponse = NetworkUtils
@@ -116,32 +189,14 @@ public class MainActivity extends AppCompatActivity {
                         .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
 
                 return simpleJsonWeatherData;
-
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
         }
-
-        @Override
-        protected void onPostExecute(String[] weatherData) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (weatherData != null) {
-                showWeatherDataView();
-                mForecastAdapter.setWeatherData(weatherData);
-            } else {
-                showErrorMessage();
-            }
-        }
-    }
-
-    private class EventListener implements ForecastAdapter.ForecastAdapterOnClickHandler {
-
-        @Override
-        public void onClick(String weatherForDay) {
-            Context context = MainActivity.this;
-            Toast.makeText(context, weatherForDay, Toast.LENGTH_SHORT)
-                    .show();
+        public void deliverResult(String[] data) {
+            mWeatherData = data;
+            super.deliverResult(data);
         }
     }
 }
