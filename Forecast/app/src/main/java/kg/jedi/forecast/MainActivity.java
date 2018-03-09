@@ -2,12 +2,14 @@ package kg.jedi.forecast;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,7 +28,7 @@ import kg.jedi.forecast.utilities.NetworkUtils;
 import kg.jedi.forecast.utilities.OpenWeatherJsonUtils;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<String[]> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int FORECAST_LOADER_ID = 0;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ForecastAdapter mForecastAdapter;
     private EventListener eventListener;
+    private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,28 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mForecastAdapter);
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(eventListener);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (PREFERENCES_HAVE_BEEN_UPDATED) {
+            Log.d(TAG, "onStart: preferences were updated");
+            getSupportLoaderManager().restartLoader(FORECAST_LOADER_ID, null, this);
+            PREFERENCES_HAVE_BEEN_UPDATED = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(eventListener);
     }
 
     @Override
@@ -75,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_refresh) {
             invalidateData();
-            getSupportLoaderManager().restartLoader(FORECAST_LOADER_ID, null, eventListener);
+            getSupportLoaderManager().restartLoader(FORECAST_LOADER_ID, null, MainActivity.this);
             return true;
         }
 
@@ -84,11 +109,17 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_settings) {
+            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+            startActivity(startSettingsActivity);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     private void loadWeatherData() {
-        LoaderCallbacks<String[]> callback = eventListener;
+        LoaderCallbacks<String[]> callback = MainActivity.this;
         Bundle bundleForLoader = null;
         getSupportLoaderManager().initLoader(FORECAST_LOADER_ID, bundleForLoader, callback);
     }
@@ -108,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openLocationInMap() {
-
-        String addressString = "1600 Ampitheatre Parkway, CA";
+        String addressString = ForecastPreferences.getPreferredWeatherLocation(this);
         Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -122,7 +152,67 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class EventListener implements ForecastAdapter.ForecastAdapterOnClickHandler, LoaderCallbacks<String[]> {
+    @Override
+    public Loader<String[]> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<String[]>(MainActivity.this) {
+            String[] mWeatherData = null;
+
+
+            @Override
+            protected void onStartLoading() {
+                if (mWeatherData != null) {
+                    deliverResult(mWeatherData);
+                } else {
+                    mLoadingIndicator.setVisibility(View.VISIBLE);
+                    forceLoad();
+                }
+            }
+
+            @Override
+            public String[] loadInBackground() {
+
+                String locationQuery = ForecastPreferences
+                        .getDefaultWeatherLocation();
+
+                URL weatherRequestUrl = NetworkUtils.buildUrl(locationQuery);
+
+                try {
+                    String jsonWeatherResponse = NetworkUtils
+                            .getResponseFromHttpUrl(weatherRequestUrl);
+
+                    String[] simpleJsonWeatherData = OpenWeatherJsonUtils
+                            .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
+
+                    return simpleJsonWeatherData;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            public void deliverResult(String[] data) {
+                mWeatherData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String[]> loader, String data[]) {
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mForecastAdapter.setWeatherData(data);
+        if (null == data) {
+            showErrorMessage();
+        } else {
+            showWeatherDataView();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String[]> loader) {
+    }
+
+    private class EventListener implements ForecastAdapter.ForecastAdapterOnClickHandler, SharedPreferences.OnSharedPreferenceChangeListener {
 
         @Override
         public void onClick(String weatherForDay) {
@@ -135,68 +225,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public Loader<String[]> onCreateLoader(int id, Bundle args) {
-            return new AsyncTask(MainActivity.this);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<String[]> loader, String data[]) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            mForecastAdapter.setWeatherData(data);
-            if (null == data) {
-                showErrorMessage();
-            } else {
-                showWeatherDataView();
-            }
-        }
-
-        @Override
-        public void onLoaderReset(Loader<String[]> loader) {
-        }
-
-    }
-
-    private class AsyncTask extends AsyncTaskLoader<String[]> {
-        String[] mWeatherData = null;
-
-        public AsyncTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onStartLoading() {
-            if (mWeatherData != null) {
-                deliverResult(mWeatherData);
-            } else {
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                forceLoad();
-            }
-        }
-
-        @Override
-        public String[] loadInBackground() {
-
-            String locationQuery = ForecastPreferences
-                    .getPreferredWeatherLocation(MainActivity.this);
-
-            URL weatherRequestUrl = NetworkUtils.buildUrl(locationQuery);
-
-            try {
-                String jsonWeatherResponse = NetworkUtils
-                        .getResponseFromHttpUrl(weatherRequestUrl);
-
-                String[] simpleJsonWeatherData = OpenWeatherJsonUtils
-                        .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
-
-                return simpleJsonWeatherData;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        public void deliverResult(String[] data) {
-            mWeatherData = data;
-            super.deliverResult(data);
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            PREFERENCES_HAVE_BEEN_UPDATED = true;
         }
     }
 }
