@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -20,8 +19,8 @@ import kg.jedi.jpomodoro.busines.PTState;
 import kg.jedi.jpomodoro.busines.PomodoroTimer;
 import kg.jedi.jpomodoro.busines.PomodoroTimerState;
 import kg.jedi.jpomodoro.busines.SettingState;
+import kg.jedi.jpomodoro.util.JR;
 import kg.jedi.jpomodoro.util.Preference;
-import kg.jedi.jpomodoro.util.Resource;
 
 import static kg.jedi.jpomodoro.util.Preference.LONG_BREAK;
 import static kg.jedi.jpomodoro.util.Preference.POMODORO;
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         init();
-        setPreferenceData();
+        setCountPreference();
         setListeners();
 
         ptState.changeState(PTState.POMODORO);//def state
@@ -97,17 +96,15 @@ public class MainActivity extends AppCompatActivity {
         btnResetData = findViewById(R.id.btnResetData);
 
         pomodoroTime = sharedPreferences.getInt(POMODORO,
-                Resource.getRInt(getApplicationContext(), R.integer.def_pomodoro));
+                JR.getRInt(getApplicationContext(), R.integer.def_pomodoro));
         shortBreakTime = sharedPreferences.getInt(SHORT_BREAK,
-                Resource.getRInt(getApplicationContext(), R.integer.def_short_break));
+                JR.getRInt(getApplicationContext(), R.integer.def_short_break));
         longBreakTime = sharedPreferences.getInt(LONG_BREAK,
-                Resource.getRInt(getApplicationContext(), R.integer.def_long_break));
+                JR.getRInt(getApplicationContext(), R.integer.def_long_break));
         ptState = new PomodoroTimerState(eventListener);
     }
 
-    private void setPreferenceData() {
-        tvTimer.setText(String.format(Locale.getDefault(), "%d:%s", pomodoroTime, "00"));
-
+    private void setCountPreference() {
         int pomodoro = getCountFromSharedPreference(POMODORO_COUNT);
         int shortBreak = getCountFromSharedPreference(SHORT_BREAK_COUNT);
         int longBreak = getCountFromSharedPreference(LONG_BREAK_COUNT);
@@ -118,20 +115,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void setListeners() {
         btnStart.setOnClickListener(view -> startTimer());
-
         btnReset.setOnClickListener(view -> resetTimer());
-
         btnPause.setOnClickListener(view -> pauseTimer());
-
-        btnResetData.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "Not yet!", Toast.LENGTH_SHORT).show();
-        });
+        btnResetData.setOnClickListener(view -> alertDelete());
     }
 
     private void pauseTimer() {
-        pmTimer.cancel();
-        timerIsActive = false;
-        ptState.changeState(PTState.ONPAUSE);
+        if (null != pmTimer) {
+            pmTimer.cancel();
+            timerIsActive = false;
+            ptState.changeState(PTState.ONPAUSE);
+        }
     }
 
     private void startTimer() {
@@ -146,23 +140,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetTimer() {
-        timerIsActive = false;
-        pmTimer.cancel();
-        ptState.changeState(PTState.POMODORO);
-        setPreferenceData();
+        if (null != pmTimer) {
+            timerIsActive = false;
+            pmTimer.cancel();
+            ptState.changeState(PTState.POMODORO);
+            setCountPreference();
+        }
     }
 
     private void alertChanges() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage("Do you want to reload changed settings?")
-                .setNegativeButton("No", (dialog, which) ->  dialog.dismiss())
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    dialog.dismiss();
-                    settingState.changeState(SettingState.SState.OLD);
-                    recreate();
-                });
+        builder.setMessage(JR.getRString(getApplicationContext(), R.string.setting_change_message))
+                .setNegativeButton(JR.getRString(getApplicationContext(), R.string.dialog_no),
+                        (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(JR.getRString(getApplicationContext(), R.string.dialog_yes),
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            settingState.changeState(SettingState.SState.OLD);
+                            recreate();
+                        });
 
         builder.show();
+    }
+
+    private void alertDelete() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage(JR.getRString(getApplicationContext(), R.string.delete_counts_message))
+                .setNegativeButton(JR.getRString(getApplicationContext(), R.string.dialog_no),
+                        (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(JR.getRString(getApplicationContext(), R.string.dialog_yes),
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            deleteCount();
+                        });
+
+        builder.show();
+    }
+
+    private void deleteCount() {
+        int defCount = JR.getRInt(getApplicationContext(), R.integer.def_count);
+        editSharedPreferences(POMODORO_COUNT, defCount);
+        editSharedPreferences(LONG_BREAK_COUNT, defCount);
+        editSharedPreferences(SHORT_BREAK_COUNT, defCount);
+        setCountPreference();
     }
 
     private void handleTimerStateChanges(PTState PTState) {
@@ -173,18 +193,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case SHORT_BREAK:
                 mainTimeInSec = shortBreakTime * onMinInSec;
-                timerLabel = Resource.getRString(getApplicationContext(), R.string.label_short_break);
+                timerLabel = JR.getRString(getApplicationContext(), R.string.label_short_break);
                 break;
             case LONG_BREAK:
                 mainTimeInSec = longBreakTime * onMinInSec;
-                timerLabel = Resource.getRString(getApplicationContext(), R.string.label_long_break);
+                timerLabel = JR.getRString(getApplicationContext(), R.string.label_long_break);
                 break;
             default:
                 mainTimeInSec = pomodoroTime * onMinInSec;
-                timerLabel = Resource.getRString(getApplicationContext(), R.string.label_pomodoro);
+                timerLabel = JR.getRString(getApplicationContext(), R.string.label_pomodoro);
         }
         tvTimerLabel.setText(timerLabel);
         updateUITimer(mainTimeInSec);
+        setCountPreference();
     }
 
     private void handleTimerFinish() {
@@ -194,30 +215,35 @@ public class MainActivity extends AppCompatActivity {
         pmTimer.cancel();
         timerIsActive = false;
 
-        if (PTState.SHORT_BREAK == ptState.getTimerState() || PTState.LONG_BREAK == ptState.getTimerState()) {
+        if (PTState.SHORT_BREAK == ptState.getTimerState()) {
+            editSharedPreferences(SHORT_BREAK_COUNT, shortBreak + 1);
             ptState.changeState(PTState.POMODORO);
-            sharedPreferences.edit()
-                    .putInt(POMODORO_COUNT, pomodoro + 1)
-                    .apply();
 
-        } else if ((pomodoro % 4) == 0 && PTState.POMODORO == ptState.getTimerState()) {
+        } else if(PTState.LONG_BREAK == ptState.getTimerState()) {
+            editSharedPreferences(LONG_BREAK_COUNT, longBreak + 1);
+            ptState.changeState(PTState.POMODORO);
+
+        } else if (pomodoro != 0 && (pomodoro % 4) == 0
+                && PTState.POMODORO == ptState.getTimerState()) {
+
+            editSharedPreferences(POMODORO_COUNT, pomodoro + 1);
             ptState.changeState(PTState.LONG_BREAK);
-            sharedPreferences.edit()
-                    .putInt(LONG_BREAK_COUNT, longBreak + 1)
-                    .apply();
 
         } else {
+            editSharedPreferences(POMODORO_COUNT, pomodoro + 1);
             ptState.changeState(PTState.SHORT_BREAK);
-            sharedPreferences.edit()
-                    .putInt(SHORT_BREAK_COUNT, shortBreak + 1)
-                    .apply();
         }
+    }
 
+    private void editSharedPreferences(String key, int value) {
+        sharedPreferences.edit()
+                .putInt(key, value)
+                .apply();
     }
 
     private int getCountFromSharedPreference(String key) {
         return sharedPreferences.getInt(key,
-                Resource.getRInt(getApplicationContext(), R.integer.def_count));
+                JR.getRInt(getApplicationContext(), R.integer.def_count));
     }
 
     private void updateUITimer(int secondsLeft) {
@@ -250,15 +276,12 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-            settingState.changeState(SettingState.SState.OLD);
-            startSettingsActivity.putExtra("state", settingState);
+            Intent startSettingsActivity = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(startSettingsActivity);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private class EventListener
             implements PomodoroTimer.OnTimerChanged, PomodoroTimerState.OnTimerStateChanged {
@@ -275,8 +298,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onStateChange(PTState PTState) {
-            handleTimerStateChanges(PTState);
+        public void onStateChange(PTState state) {
+            handleTimerStateChanges(state);
         }
     }
 

@@ -14,9 +14,9 @@ public class PomodoroTimerState {
         this.stateListener = listener;
     }
 
-    public void changeState(PTState PTState) {
-        this.timerPTState = PTState;
-        stateListener.onStateChange(PTState);
+    public void changeState(PTState state) {
+        this.timerPTState = state;
+        stateListener.onStateChange(state);
     }
 
     public PTState getTimerState() {
@@ -24,6 +24,6 @@ public class PomodoroTimerState {
     }
 
     public interface OnTimerStateChanged {
-        void onStateChange(PTState PTState);
+        void onStateChange(PTState state);
     }
 }
