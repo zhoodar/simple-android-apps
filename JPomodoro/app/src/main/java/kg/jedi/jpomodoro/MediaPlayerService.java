@@ -17,7 +17,7 @@ public class MediaPlayerService extends Service {
 
     public void onCreate() {
         super.onCreate();
-        mPlayer = MediaPlayer.create(this, R.raw.analog_watch_alarm);
+        mPlayer = MediaPlayer.create(this, R.raw.notification_sound);
 
     }
 
