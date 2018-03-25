@@ -27,6 +27,11 @@
                 android:value=".MainActivity"/>
         </activity>
         <activity android:name=".SettingsActivity"/>
+
+        <provider
+            android:authorities="kg.jedi.forecast"
+            android:name=".data.WeatherContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

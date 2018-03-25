@@ -47,6 +47,16 @@ public final class ForecastDateUtils {
         return retValNew;
     }
 
+    public static boolean isDateNormalized(long millisSinceEpoch) {
+        boolean isDateNormalized = false;
+        if (millisSinceEpoch % DAY_IN_MILLIS == 0) {
+            isDateNormalized = true;
+        }
+
+        return isDateNormalized;
+    }
+
+
     /**
      * Since all dates from the database are in UTC, we must convert the given date
      * (in UTC timezone) to the date in the local timezone. Ths function performs that conversion
@@ -134,15 +144,6 @@ public final class ForecastDateUtils {
         }
     }
 
-    /**
-     * Returns a date string in the format specified, which shows a date, without a year,
-     * abbreviated, showing the full weekday.
-     *
-     * @param context      Used by DateUtils to formate the date in the current locale
-     * @param timeInMillis Time in milliseconds since the epoch (local time)
-     *
-     * @return The formatted date string
-     */
     private static String getReadableDateString(Context context, long timeInMillis) {
         int flags = DateUtils.FORMAT_SHOW_DATE
                 | DateUtils.FORMAT_NO_YEAR
