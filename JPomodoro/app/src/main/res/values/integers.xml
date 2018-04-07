@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="def_short_break">5</integer>
+    <integer name="max_short_break">8</integer>
+
+    <integer name="def_long_break">10</integer>
+    <integer name="max_long_break">15</integer>
+
+    <integer name="def_pomodoro">25</integer>
+    <integer name="max_pomodoro">40</integer>
+
+    <integer name="def_count">0</integer>
+
+</resources>
