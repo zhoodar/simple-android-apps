@@ -11,7 +11,6 @@ import kg.jedi.jhydratetracker.Actions.ACTION_INCREMENT_WATER_COUNT
 import kg.jedi.jhydratetracker.service.WaterReminderIntentService
 import kg.jedi.jhydratetracker.util.PreferenceUtils
 import kg.jedi.jhydratetracker.util.ReminderUtils
-import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
