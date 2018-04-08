@@ -5,7 +5,7 @@ import android.os.AsyncTask
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import kg.jedi.jhydratetracker.Actions.ACTION_HYDRATE_REMINDER
-import kg.jedi.jhydratetracker.util.ReminderTasks
+import kg.jedi.jhydratetracker.util.executeTask
 
 open class WaterReminderFirebaseJobService : JobService() {
 
@@ -17,7 +17,7 @@ open class WaterReminderFirebaseJobService : JobService() {
         mBackgroundTask = object : AsyncTask<Any, Any, Any?>() {
             override fun doInBackground(vararg params: Any?): Any? {
                 val context = this@WaterReminderFirebaseJobService
-                ReminderTasks.executeTask(context, ACTION_HYDRATE_REMINDER)
+                executeTask(context, ACTION_HYDRATE_REMINDER)
                 return null
             }
 

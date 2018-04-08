@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,15 +19,17 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".SettingsActivity"
+            android:label="@string/at_settings"
+            android:parentActivityName=".MainActivity"/>
         <service
             android:name=".service.WaterReminderIntentService"
-            android:exported="false"/>
-
+            android:exported="false" />
         <service
             android:name=".service.WaterReminderFirebaseJobService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
     </application>
