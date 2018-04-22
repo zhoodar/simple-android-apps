@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/ivType"
+            android:layout_width="0dp"
+            android:layout_weight="1.1"
+            android:background="@mipmap/ic_food"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/iv_content_desc" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/e_t_groceries"
+                android:textColor="@color/primaryText"/>
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColorHighlight="@color/secondaryText"
+                android:text="@string/def_date"
+                android:textColor="@color/primaryText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.7"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="17sp"
+                android:textColor="@color/red"
+                android:text="@string/minus"
+                android:layout_marginRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp" />
+
+            <TextView
+                android:id="@+id/tvSum"
+                android:textSize="17sp"
+                android:textColor="@color/red"
+                android:text="@string/def_sum"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp" />
+
+            <TextView
+                android:textSize="17sp"
+                android:textColor="@color/red"
+                android:text="@string/def_currency"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
+</LinearLayout>

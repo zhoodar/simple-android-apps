@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_home"
-        android:title="Home"
+        android:title="@string/lbl_home"
         app:showAsAction="ifRoom"
         android:enabled="true"
         android:icon="@drawable/ic_home">
     </item>
     <item
         android:id="@+id/nav_history"
-        android:title="History"
+        android:title="@string/lbl_history"
         app:showAsAction="ifRoom"
         android:enabled="true"
         android:icon="@drawable/ic_history">
@@ -18,10 +18,10 @@
 
     <item
         android:id="@+id/nav_setting"
-        android:title="Setting"
+        android:title="@string/lbl_setting"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_history">
+        android:icon="@drawable/ic_settings">
     </item>
 
 </menu>

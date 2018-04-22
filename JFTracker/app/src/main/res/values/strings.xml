@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">JFTracker</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lbl_setting">Setting</string>
+    <string name="lbl_history">History</string>
+    <string name="lbl_home">Home</string>
+    <string name="minus">-</string>
+    <string name="iv_content_desc">iv expense type</string>
+
+    <string name="e_t_food">Food</string>
+    <string name="e_t_transport">Transport</string>
+    <string name="e_t_clothes">Clothes &amp; shoes</string>
+    <string name="e_t_deposit">Deposit</string>
+    <string name="e_t_activities">Any Activities</string>
+    <string name="e_t_groceries">Groceries</string>
+
+    <string name="def_date">01.04.2018</string>
+    <string name="def_sum">0</string>
+    <string name="def_currency">C</string>
 </resources>
