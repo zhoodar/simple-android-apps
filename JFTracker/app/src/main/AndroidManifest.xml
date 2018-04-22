@@ -16,6 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="kg.jedi.jftracker"
+            android:name=".db.DbContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>
