@@ -17,4 +17,6 @@
     <string name="def_date">01.04.2018</string>
     <string name="def_sum">0</string>
     <string name="def_currency">C</string>
+    <string name="lbl_add">Add</string>
+    <string name="lbl_spinner_hint">Pick a type</string>
 </resources>

@@ -9,6 +9,7 @@
         android:id="@+id/recViewExpense"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="53dp"
         android:paddingBottom="8dp"/>
 
     <android.support.design.widget.FloatingActionButton
