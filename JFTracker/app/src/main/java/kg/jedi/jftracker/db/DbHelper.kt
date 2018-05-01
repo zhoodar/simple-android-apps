@@ -16,20 +16,14 @@ class DbHelper(context: Context?)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL(SQL_DELETE_ENTRIES)
+        db.execSQL(SQL_DROP_ENTRIES)
         onCreate(db)
     }
 
     companion object {
         private val DATABASE_NAME = "JFinance.db"
         private val VERSION = 1
-        private val SQL_CREATE_ENTRIES =
-                "CREATE TABLE ${ExpenseEntry.TABLE_NAME} (" +
-                        "${ExpenseEntry.COLUMN_ID} INTEGER PRIMARY KEY," +
-                        "${ExpenseEntry.COLUMN_TYPE} VARCHAR(50) NOT NULL, " +
-                        "${ExpenseEntry.COLUMN_CREATED_AT} DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                        "${ExpenseEntry.COLUMN_SUM} INTEGER NOT NULL);"
-
-        private val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${ExpenseEntry.TABLE_NAME};"
+        private val SQL_CREATE_ENTRIES = ExpenseEntry.SQL_CREATE_ENTRY
+        private val SQL_DROP_ENTRIES = ExpenseEntry.SQL_DROP_ENTRY
     }
 }

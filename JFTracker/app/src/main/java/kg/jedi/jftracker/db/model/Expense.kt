@@ -1,13 +1,39 @@
 package kg.jedi.jftracker.db.model
 
-import java.time.LocalDateTime
+import java.util.*
 
 /**
  * @author Joodar on 4/22/18.
  */
 
-class Expense(val id: String, val type: ExpenseType, val sum: Int, val createdAt: LocalDateTime)
+class Expense {
+    var id: String? = null
+    var type: String = ExpenseType.GROCERIES.name
+    var sum: Int = 0
+    var status: String = ExpenseStatus.ACTIVE.name
+    var createdAt: Calendar = Calendar.getInstance()
+
+    fun getType() = when (type) {
+        "ACTIVITIES" -> ExpenseType.ACTIVITIES
+        "CLOTHES" -> ExpenseType.CLOTHES
+        "DEPOSIT" -> ExpenseType.DEPOSIT
+        "FOOD" -> ExpenseType.FOOD
+        "GROCERIES" -> ExpenseType.GROCERIES
+        "TRANSPORT" -> ExpenseType.TRANSPORT
+        else -> ExpenseType.GROCERIES
+    }
+
+    fun getStatus() = when (status) {
+        "ACTIVE" -> ExpenseStatus.ACTIVE
+        "ARCHIVED" -> ExpenseStatus.ARCHIVED
+        else -> throw IllegalStateException("Unknown type")
+    }
+}
 
 enum class ExpenseType {
     FOOD, CLOTHES, GROCERIES, ACTIVITIES, TRANSPORT, DEPOSIT
+}
+
+enum class ExpenseStatus {
+    ACTIVE, ARCHIVED
 }
