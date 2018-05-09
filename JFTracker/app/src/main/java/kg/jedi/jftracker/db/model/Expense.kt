@@ -15,7 +15,7 @@ class Expense {
 
     fun getType() = when (type) {
         "ACTIVITIES" -> ExpenseType.ACTIVITIES
-        "CLOTHES" -> ExpenseType.CLOTHES
+        "SHOPING" -> ExpenseType.SHOPING
         "DEPOSIT" -> ExpenseType.DEPOSIT
         "FOOD" -> ExpenseType.FOOD
         "GROCERIES" -> ExpenseType.GROCERIES
@@ -31,7 +31,7 @@ class Expense {
 }
 
 enum class ExpenseType {
-    FOOD, CLOTHES, GROCERIES, ACTIVITIES, TRANSPORT, DEPOSIT
+    FOOD, SHOPING, GROCERIES, ACTIVITIES, TRANSPORT, DEPOSIT, NRMI
 }
 
 enum class ExpenseStatus {
