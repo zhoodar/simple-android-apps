@@ -4,5 +4,11 @@
     android:layout_height="match_parent"
     tools:context="kg.jedi.jftracker.fragment.HistoryFragment">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recViewArchive"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="53dp"
+        android:paddingBottom="8dp"/>
 
 </FrameLayout>

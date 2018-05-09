@@ -48,8 +48,9 @@ class ActiveExpenseAdapter(private val activity: FragmentActivity
         ExpenseType.FOOD -> R.mipmap.ic_food
         ExpenseType.TRANSPORT -> R.mipmap.ic_transport
         ExpenseType.DEPOSIT -> R.mipmap.ic_deposit
-        ExpenseType.CLOTHES -> R.mipmap.ic_clothes
+        ExpenseType.SHOPING -> R.mipmap.ic_clothes
         ExpenseType.ACTIVITIES -> R.mipmap.ic_activities
+        ExpenseType.NRMI -> R.mipmap.ic_nrmi
     }
 
     override fun getItemCount(): Int {

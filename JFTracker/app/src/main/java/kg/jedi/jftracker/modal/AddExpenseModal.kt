@@ -39,7 +39,7 @@ class AddExpenseModal(private val activity: FragmentActivity,
 
     private fun initSpinner(activity: FragmentActivity) {
         val types = arrayOf(
-                ExpenseType.CLOTHES.name, ExpenseType.ACTIVITIES.name,
+                ExpenseType.SHOPING.name, ExpenseType.ACTIVITIES.name,
                 ExpenseType.FOOD.name, ExpenseType.DEPOSIT.name,
                 ExpenseType.TRANSPORT.name, ExpenseType.GROCERIES.name)
 
