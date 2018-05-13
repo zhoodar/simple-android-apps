@@ -64,6 +64,17 @@ class ExpenseDao(context: Context) {
         return contentResolver.update(uri, cv, null, null)
     }
 
+    fun updateExpense(expense: Expense): Int {
+        val uri = ExpenseEntry.CONTENT_URI.buildUpon().appendPath(expense.id).build()
+
+        val values = ContentValues()
+        values.put(ExpenseEntry.COLUMN_SUM, expense.sum)
+        values.put(ExpenseEntry.COLUMN_TYPE, expense.type)
+        values.put(ExpenseEntry.COLUMN_STATUS, expense.status)
+
+        return contentResolver.update(uri, values, null, null)
+    }
+
 
     private fun buildExpense(cursor: Cursor): Expense {
         val id = cursor.getString(ExpenseEntry.columnIndex(ExpenseEntry.COLUMN_ID))

@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="320dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp"
+    android:paddingLeft="@dimen/dialog_vertical_margin"
+    android:paddingRight="@dimen/dialog_vertical_margin"
+    android:paddingTop="@dimen/dialog_vertical_margin"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical">
@@ -15,7 +17,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
-        android:hint="Amount"
+        android:hint="@string/et_hint_amount"
         android:inputType="numberSigned" />
 
     <fr.ganfra.materialspinner.MaterialSpinner
@@ -28,9 +30,9 @@
 
     <Button
         android:id="@+id/btnAdd"
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="end"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorAccent"

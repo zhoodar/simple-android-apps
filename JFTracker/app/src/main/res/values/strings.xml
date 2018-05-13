@@ -22,4 +22,6 @@
     <string name="def_month">January</string>
     <string name="def_devider">/</string>
     <string name="def_year">2018</string>
+    <string name="et_hint_amount">Amount</string>
+    <string name="btn_lbl_update">Update</string>
 </resources>

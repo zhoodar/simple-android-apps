@@ -10,15 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import kg.jedi.jftracker.R
 import kg.jedi.jftracker.adapter.ActiveExpenseAdapter
+import kg.jedi.jftracker.adapter.ActiveExpenseAdapterOnClickHandler
 import kg.jedi.jftracker.db.dao.ExpenseDao
+import kg.jedi.jftracker.db.model.Expense
 import kg.jedi.jftracker.db.model.ExpenseStatus
 import kg.jedi.jftracker.modal.AddExpenseModal
 import kg.jedi.jftracker.modal.ContentUpdatedListener
+import kg.jedi.jftracker.modal.EditExpenseModal
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlin.concurrent.thread
 
 
-class HomeFragment : Fragment(), ContentUpdatedListener {
+class HomeFragment : Fragment(), ContentUpdatedListener, ActiveExpenseAdapterOnClickHandler {
 
     private lateinit var expenseDao: ExpenseDao
     private lateinit var activeExpenseAdapter: ActiveExpenseAdapter
@@ -30,7 +33,7 @@ class HomeFragment : Fragment(), ContentUpdatedListener {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        activeExpenseAdapter = ActiveExpenseAdapter(activity)
+        activeExpenseAdapter = ActiveExpenseAdapter(activity, this)
         recViewExpense.adapter = activeExpenseAdapter
         recViewExpense.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
@@ -46,6 +49,11 @@ class HomeFragment : Fragment(), ContentUpdatedListener {
 
     override fun updated() {
         loadData()
+    }
+
+    override fun onClick(expense: Expense) {
+        val expenseModal = EditExpenseModal(activity, expense,this)
+        expenseModal.showModal()
     }
 
     private fun loadData() {

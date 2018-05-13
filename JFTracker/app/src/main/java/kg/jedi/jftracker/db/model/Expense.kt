@@ -20,6 +20,8 @@ class Expense {
         "FOOD" -> ExpenseType.FOOD
         "GROCERIES" -> ExpenseType.GROCERIES
         "TRANSPORT" -> ExpenseType.TRANSPORT
+        "NRMI" -> ExpenseType.NRMI
+        "LO" -> ExpenseType.LO
         else -> ExpenseType.GROCERIES
     }
 
@@ -31,7 +33,7 @@ class Expense {
 }
 
 enum class ExpenseType {
-    FOOD, SHOPING, GROCERIES, ACTIVITIES, TRANSPORT, DEPOSIT, NRMI
+    FOOD, SHOPING, GROCERIES, ACTIVITIES, TRANSPORT, DEPOSIT, NRMI, LO
 }
 
 enum class ExpenseStatus {

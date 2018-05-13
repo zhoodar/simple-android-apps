@@ -17,7 +17,8 @@ import java.util.*
 /**
  * @author Joodar on 4/25/18.
  */
-class ActiveExpenseAdapter(private val activity: FragmentActivity
+class ActiveExpenseAdapter(private val activity: FragmentActivity,
+                           private val clickHandler: ActiveExpenseAdapterOnClickHandler
 ) : RecyclerView.Adapter<ActiveExpenseAdapter.ActiveExpenseViewHolder>() {
 
     val expenses: MutableList<Expense> = mutableListOf()
@@ -37,10 +38,17 @@ class ActiveExpenseAdapter(private val activity: FragmentActivity
         val date = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(expense.createdAt.time)
 
         holder.itemView.tag = expense.id
+        holder.itemView.isLongClickable = true
         holder.tvSum.text = expense.sum.toString()
         holder.tvTitle.text = expense.type
         holder.tvDate.text = date
         holder.ivType.setImageResource(getImageRes(expense.getType()))
+
+        holder.itemView.setOnLongClickListener {
+            val data = expenses[holder.adapterPosition]
+            clickHandler.onClick(data)
+            true
+        }
     }
 
     private fun getImageRes(type: ExpenseType) = when (type) {
@@ -51,6 +59,7 @@ class ActiveExpenseAdapter(private val activity: FragmentActivity
         ExpenseType.SHOPING -> R.mipmap.ic_clothes
         ExpenseType.ACTIVITIES -> R.mipmap.ic_activities
         ExpenseType.NRMI -> R.mipmap.ic_nrmi
+        ExpenseType.LO -> R.mipmap.ic_lo
     }
 
     override fun getItemCount(): Int {
@@ -70,4 +79,8 @@ class ActiveExpenseAdapter(private val activity: FragmentActivity
         var tvDate: TextView = itemView.tvDate
         var tvSum: TextView = itemView.tvSum
     }
+}
+
+interface ActiveExpenseAdapterOnClickHandler {
+    fun onClick(expense: Expense)
 }
