@@ -22,7 +22,7 @@ class EditExpenseModal(activity: FragmentActivity,
         btnAdd.text = context.getString(R.string.btn_lbl_update)
         etSum.setText(expense.sum.toString())
         val position = spnAdapter.getPosition(expense.type)
-        spinnerTypes.setSelection(position)
+        spinnerTypes.setSelection(position + 1)
     }
 
     private fun setListeners() {
